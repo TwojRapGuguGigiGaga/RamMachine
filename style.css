@@ -50,3 +50,21 @@ td, th {
 input, select, option, button {
     color: black;
 }
+
+input {
+    width: 4rem;
+}
+
+.input p {
+    text-align: center;
+    margin: 0;
+}
+
+span {
+    display: block;
+    background-color: white;
+    color: black;
+    min-width: 5rem;
+    width: fit-content;
+    min-height: 1.5rem;
+}

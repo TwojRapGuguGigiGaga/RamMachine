@@ -21,9 +21,13 @@
         <ul>
             <li>FILE</li>
             <li>ABC</li>
-            <li>START</li>
+            <li>
+                <button onclick="startProgram()">START</button>
+            </li>
             <li>STOP</li>
-            <li>RUN</li>
+            <li>
+                <button onclick="nextStep()">NEXT</button>
+            </li>
             <li>PREV</li>
             <li>NEXT</li>
         </ul>
@@ -33,10 +37,10 @@
         <div class="leftSide">
             <div class="processor box">
                 <h3>PROCESSOR</h3>
-                <label for="procIns">Instruction</label>
-                <input type="number" name="procIns" id=""><br>
-                <label for="procArg">Argument</label>
-                <input type="number" name="procArg" id="">
+                <p>Instruction</p>
+                <span id="procIns"></span>
+                <p>Argument</p>
+                <span id="procArg"></span>
             </div>
 
             <div class="memory box">
@@ -57,16 +61,7 @@
 
         <div class="rightSide">
             <div class="inputTape box">
-                <div class="userInput">
-                    <div class="input">
-                        <p>1</p>
-                        <input type="text" name="" id="">
-                    </div>
-
-                    <div class="input">
-                        <p>2</p>
-                        <input type="text" name="" id="">
-                    </div>
+                <div class="userInput" id="inputTape">
                 </div>
             </div> 
 
@@ -89,16 +84,7 @@
             </div>
 
             <div class="outputTape box">
-                <div class="userInput">
-                    <div class="input">
-                        <p>1</p>
-                        <input type="text" name="" id="">
-                    </div>
-
-                    <div class="input">
-                        <p>2</p>
-                        <input type="text" name="" id="">
-                    </div>
+                <div class="userInput" id="outputTape">
                 </div>
             </div>
         </div>
