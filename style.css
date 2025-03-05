@@ -46,3 +46,7 @@ td, th {
     display: flex;
     gap: 1rem;
 }
+
+input, select, option {
+    color: black;
+}

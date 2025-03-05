@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAM MACHINE            </title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="navbar box">
@@ -20,7 +21,7 @@
         <ul>
             <li>FILE</li>
             <li>ABC</li>
-            <li>START GUGU</li>
+            <li>START</li>
             <li>STOP</li>
             <li>RUN</li>
             <li>PREV</li>
@@ -39,7 +40,7 @@
             </div>
 
             <div class="memory box">
-                <table>
+                <table id="memoryTable">
                     <tr>
                         <th>MEMORY</th>
                     </tr>
@@ -49,18 +50,7 @@
                         <td>Value</td>
                     </tr>
 
-                    <tr>
-                        <td>0</td>
-                        <td>?</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>?</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>?</td>
-                    </tr>
+                    <!-- reszta dodaje sie przez js, funkcja onload -->
                 </table>
             </div>
         </div>
@@ -81,7 +71,7 @@
             </div> 
 
             <div class="program box">
-                <table>
+                <table id="programTable">
                     <tr>
                         <th>PROGRAM</th>
                     </tr>
@@ -91,20 +81,6 @@
                         <td>Label</td>
                         <td>Instruction</td>
                         <td>Argument</td>
-                    </tr>
-
-                    <tr>
-                        <td>1</td>
-                        <td></td>
-                        <td>read</td>
-                        <td>1</td>
-                    </tr>
-
-                    <tr>
-                        <td>2</td>
-                        <td></td>
-                        <td>read</td>
-                        <td>2</td>
                     </tr>
                 </table>
             </div>
