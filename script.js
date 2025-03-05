@@ -55,3 +55,7 @@ function createNewProgramElement() {
     newRow.appendChild(argumentCell);
     programTable.appendChild(newRow);
 }
+
+function addElementToProgram() {
+    
+}

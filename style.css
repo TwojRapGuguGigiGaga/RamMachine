@@ -24,7 +24,7 @@ body {
 }
 
 .leftSide {
-    width: 15%;
+    width: 30%;
     margin-right: 1rem;
 }
 
@@ -47,6 +47,6 @@ td, th {
     gap: 1rem;
 }
 
-input, select, option {
+input, select, option, button {
     color: black;
 }
