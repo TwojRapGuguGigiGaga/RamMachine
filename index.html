@@ -3,9 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>RAM MACHINE            </title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    FASJOFS
+    <div class="navbar box">
+        <ul>
+            <li>File</li>
+            <li>View</li>
+            <li>Program</li>
+            <li>Data</li>
+            <li>Tools</li>
+            <li>Help</li>
+        </ul>
+        <hr>
+        <ul>
+            <li>FILE</li>
+            <li>ABC</li>
+            <li>START</li>
+            <li>STOP</li>
+            <li>RUN</li>
+            <li>PREV</li>
+            <li>NEXT</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="leftSide">
+            <div class="processor box">
+                <h3>PROCESSOR</h3>
+                <label for="procIns">Instruction</label>
+                <input type="number" name="procIns" id=""><br>
+                <label for="procArg">Argument</label>
+                <input type="number" name="procArg" id="">
+            </div>
+
+            <div class="memory box">
+                <table>
+                    <tr>
+                        <th>MEMORY</th>
+                    </tr>
+
+                    <tr>
+                        <td>Address</td>
+                        <td>Value</td>
+                    </tr>
+
+                    <tr>
+                        <td>0</td>
+                        <td>?</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>?</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>?</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="rightSide">
+            <div class="inputTape box">
+                <div class="userInput">
+                    <div class="input">
+                        <p>1</p>
+                        <input type="text" name="" id="">
+                    </div>
+
+                    <div class="input">
+                        <p>2</p>
+                        <input type="text" name="" id="">
+                    </div>
+                </div>
+            </div> 
+
+            <div class="program box">
+                <table>
+                    <tr>
+                        <th>PROGRAM</th>
+                    </tr>
+
+                    <tr>
+                        <td>LN</td>
+                        <td>Label</td>
+                        <td>Instruction</td>
+                        <td>Argument</td>
+                    </tr>
+
+                    <tr>
+                        <td>1</td>
+                        <td></td>
+                        <td>read</td>
+                        <td>1</td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td></td>
+                        <td>read</td>
+                        <td>2</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="outputTape box">
+                <div class="userInput">
+                    <div class="input">
+                        <p>1</p>
+                        <input type="text" name="" id="">
+                    </div>
+
+                    <div class="input">
+                        <p>2</p>
+                        <input type="text" name="" id="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
