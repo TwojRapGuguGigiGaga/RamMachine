@@ -68,3 +68,13 @@ span {
     width: fit-content;
     min-height: 1.5rem;
 }
+
+.animationBlock {
+    width: 5rem;
+    height: 5rem;
+    background-image: url(https://wykop.pl/cdn/c3201142/comment_1625431358Oh9v9WO31IekIUnn5N1Xf5.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    border-radius: 50%;
+    background-size: 100% 100%;
+}

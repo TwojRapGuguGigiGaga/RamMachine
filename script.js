@@ -102,34 +102,66 @@ function nextStep() {
     currentStep++;
 }
 
+function animation(element1, element2) {
+    return new Promise((resolve) => {
+        let skopiowanyBlok = document.createElement("div");
+        skopiowanyBlok.innerText = element1.value;
+        skopiowanyBlok.className = "animationBlock"; 
+        skopiowanyBlok.style.position = "absolute";
+        skopiowanyBlok.style.top = element1.getBoundingClientRect().top + "px";
+        skopiowanyBlok.style.left = element1.getBoundingClientRect().left + "px";
+        document.body.appendChild(skopiowanyBlok);
+        skopiowanyBlok.style.transition = "top 1s linear, left 1s linear, opacity 0.5s ease 1s, transform 1s linear"
+        skopiowanyBlok.style.transform = "rotate(0deg)";
+
+        setTimeout(() => {
+            skopiowanyBlok.style.top = element2.getBoundingClientRect().top + "px";
+            skopiowanyBlok.style.left = element2.getBoundingClientRect().left + "px";
+            skopiowanyBlok.style.transform = "rotate(720deg)";
+        }, 50);
+
+        setTimeout(() => {
+            skopiowanyBlok.style.opacity = "0";
+        }, 1100);
+
+        setTimeout(() => {
+            skopiowanyBlok.remove();
+            resolve();
+        }, 1600);
+    });
+}
+
+let processorIns = document.getElementById("procIns");
+let processorArg = document.getElementById("procArg");
+
 async function startProgram() {
     const programTable = document.getElementById("programTable");
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
-    let processorIns = document.getElementById("procIns");
-    let processorArg = document.getElementById("procArg");
-
-    let currentInputElement = document.getElementById(("input" + currentInput.toString()));
-    currentInputElement.style.backgroundColor = "orange";
-
     for (let i=0; i<numberOfSteps; i++) {
-        const instruction = document.getElementById(("select" + currentInput.toString())).value;
-        const argument = document.getElementById(("arg" + currentInput.toString())).value;
-        
-        processorIns.innerHTML = instruction;
-        processorArg.innerHTML = argument;
-
-        const inputValue = document.getElementById(("input" + currentInput.toString())).value;
-
-        let memoryValue = document.getElementById(("memoryValue" + argument));
-        memoryValue.innerHTML = inputValue;
+        programRead();
 
         await new Promise(resolve => setTimeout(resolve, 1000));
         currentInput++;
-
-        let currentInputElement = document.getElementById(("input" + currentInput.toString()));
-        currentInputElement.style.backgroundColor = "orange";
-        let prevInputElement = document.getElementById(("input" + (currentInput-1).toString()));
-        prevInputElement.style.backgroundColor = "white";
     }
+}
+
+async function programRead() {
+    const instruction = document.getElementById(("select" + currentInput.toString()));
+    const instructionValue = instruction.value;
+    const argument = document.getElementById(("arg" + currentInput.toString()));
+    const argumentValue = argument.value;
+
+    const inputElement = document.getElementById(("input" + currentInput.toString()));
+    const inputValue = inputElement.value;
+
+    await animation(instruction, processorIns);
+    processorIns.innerHTML = instructionValue;
+
+    await animation(argument, processorArg);
+    processorArg.innerHTML = argumentValue;
+
+    let memoryValue = document.getElementById(("memoryValue" + argumentValue));
+    await animation(inputElement, memoryValue);
+    memoryValue.innerHTML = inputValue;
 }
