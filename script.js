@@ -18,6 +18,7 @@ function addMemoryElements() {
 
         const valueCell = document.createElement("td");
         valueCell.setAttribute("id", ("memoryValue" + i.toString()));
+        valueCell.setAttribute("value", ("0"));
         valueCell.textContent = "-";
 
         newRow.appendChild(idCell);
@@ -37,7 +38,10 @@ function createNewProgramElement() {
 
     const idCell = document.createElement("td");
     idCell.textContent = id;
-    idCell.setAttribute("id", id);
+    idCell.setAttribute("id", ("programRow" + id));
+    if (id == 1) {
+        idCell.style.backgroundColor = "orange";
+    }
 
     const labelCell = document.createElement("td");
     const labelInput = document.createElement("input");
@@ -85,6 +89,9 @@ function addTapeElements(tapeType) {
         inputIndexP.textContent = (i+1);
 
         const inputNumber = document.createElement("input");
+        if (i==0) {
+            inputNumber.style.backgroundColor = "orange";
+        }
         inputNumber.setAttribute("type", "text");
         inputNumber.setAttribute("id", tapeType == "input" ? "input" + (i+1).toString() : "output" + (i+1).toString());
 
@@ -112,12 +119,10 @@ function animation(element1, element2) {
         skopiowanyBlok.style.left = element1.getBoundingClientRect().left + "px";
         document.body.appendChild(skopiowanyBlok);
         skopiowanyBlok.style.transition = "top 1s linear, left 1s linear, opacity 0.5s ease 1s, transform 1s linear"
-        skopiowanyBlok.style.transform = "rotate(0deg)";
 
         setTimeout(() => {
             skopiowanyBlok.style.top = element2.getBoundingClientRect().top + "px";
             skopiowanyBlok.style.left = element2.getBoundingClientRect().left + "px";
-            skopiowanyBlok.style.transform = "rotate(720deg)";
         }, 50);
 
         setTimeout(() => {
@@ -131,6 +136,13 @@ function animation(element1, element2) {
     });
 }
 
+function updateInputTape() {
+    const inputElement = document.getElementById(("input" + (currentInput+1).toString()));
+    inputElement.style.backgroundColor = "orange";
+    const prevInputElement = document.getElementById(("input" + currentInput.toString()));
+    prevInputElement.style.backgroundColor = "white";
+}
+
 let processorIns = document.getElementById("procIns");
 let processorArg = document.getElementById("procArg");
 
@@ -139,29 +151,68 @@ async function startProgram() {
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
     for (let i=0; i<numberOfSteps; i++) {
-        programRead();
+        updateVariables();
+
+        const instructionValue = document.getElementById(("select" + currentInput.toString())).value;
+        switch (instructionValue) {
+            case "read":
+                await programRead();
+                break;
+            case "add":
+                await programAdd();
+                break;
+        }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
         currentInput++;
+
+        const programRow = document.getElementById(("programRow" + currentInput.toString()));
+        programRow.style.backgroundColor = "orange";
+        const prevProgramRow = document.getElementById(("programRow" + (currentInput-1).toString()));
+        prevProgramRow.style.backgroundColor = "#222";
     }
 }
 
-async function programRead() {
-    const instruction = document.getElementById(("select" + currentInput.toString()));
-    const instructionValue = instruction.value;
-    const argument = document.getElementById(("arg" + currentInput.toString()));
-    const argumentValue = argument.value;
+let instruction, instructionValue, argument, argumentValue, zeroMemoryValue, memoryValue;
 
-    const inputElement = document.getElementById(("input" + currentInput.toString()));
-    const inputValue = inputElement.value;
+function updateVariables() {
+    instruction = document.getElementById("select" + currentInput.toString());
+    instructionValue = instruction.value;
+    argument = document.getElementById("arg" + currentInput.toString());
+    argumentValue = argument.value;
+    zeroMemoryValue = document.getElementById("memoryValue0");
+    memoryValue = document.getElementById("memoryValue" + argumentValue);
+}
 
+async function loadRowToProcessor() {
     await animation(instruction, processorIns);
     processorIns.innerHTML = instructionValue;
+    processorIns.value = instructionValue;
 
     await animation(argument, processorArg);
     processorArg.innerHTML = argumentValue;
+    processorArg.value = argumentValue;
+}
 
-    let memoryValue = document.getElementById(("memoryValue" + argumentValue));
+async function programRead() {
+    const inputElement = document.getElementById(("input" + currentInput.toString()));
+    const inputValue = inputElement.value;
+
+    await loadRowToProcessor();
+
     await animation(inputElement, memoryValue);
     memoryValue.innerHTML = inputValue;
+    memoryValue.value = inputValue;
+
+    updateInputTape();
+}
+
+async function programAdd() {
+    await loadRowToProcessor();
+
+    await animation(processorArg, memoryValue);
+
+    await animation(memoryValue, zeroMemoryValue);
+    zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+    zeroMemoryValue.value = (memoryValue.value + zeroMemoryValue.value);
 }

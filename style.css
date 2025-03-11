@@ -70,11 +70,9 @@ span {
 }
 
 .animationBlock {
-    width: 5rem;
-    height: 5rem;
-    background-image: url(https://wykop.pl/cdn/c3201142/comment_1625431358Oh9v9WO31IekIUnn5N1Xf5.jpg);
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    border-radius: 50%;
-    background-size: 100% 100%;
+    min-width: 3rem;
+    width: fit-content;
+    background-color: white;
+    border: black 1px solid;
+    color: black;
 }
