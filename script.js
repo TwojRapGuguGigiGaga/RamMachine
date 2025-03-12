@@ -35,7 +35,7 @@ function createNewProgramElement() {
     const id = numbersOfRows - 1;
 
     const newRow = document.createElement("tr");
-
+            
     const idCell = document.createElement("td");
     idCell.textContent = id;
     idCell.setAttribute("id", ("programRow" + id));
@@ -104,6 +104,7 @@ function addTapeElements(tapeType) {
 
 let currentStep = 1;
 let currentInput = 1;
+let currentOutput = 1;
 
 function nextStep() {
     currentStep++;
@@ -111,26 +112,26 @@ function nextStep() {
 
 function animation(element1, element2) {
     return new Promise((resolve) => {
-        let skopiowanyBlok = document.createElement("div");
-        skopiowanyBlok.innerText = element1.value;
-        skopiowanyBlok.className = "animationBlock"; 
-        skopiowanyBlok.style.position = "absolute";
-        skopiowanyBlok.style.top = element1.getBoundingClientRect().top + "px";
-        skopiowanyBlok.style.left = element1.getBoundingClientRect().left + "px";
-        document.body.appendChild(skopiowanyBlok);
-        skopiowanyBlok.style.transition = "top 1s linear, left 1s linear, opacity 0.5s ease 1s, transform 1s linear"
+        let copiedBlock = document.createElement("div");
+        copiedBlock.innerText = element1.value;
+        copiedBlock.className = "animationBlock"; 
+        copiedBlock.style.position = "absolute";
+        copiedBlock.style.top = element1.getBoundingClientRect().top + "px";
+        copiedBlock.style.left = element1.getBoundingClientRect().left + "px";
+        document.body.appendChild(copiedBlock);
+        copiedBlock.style.transition = "top 1s linear, left 1s linear, opacity 0.5s ease 1s, transform 1s linear"
 
         setTimeout(() => {
-            skopiowanyBlok.style.top = element2.getBoundingClientRect().top + "px";
-            skopiowanyBlok.style.left = element2.getBoundingClientRect().left + "px";
+            copiedBlock.style.top = element2.getBoundingClientRect().top + "px";
+            copiedBlock.style.left = element2.getBoundingClientRect().left + "px";
         }, 50);
 
         setTimeout(() => {
-            skopiowanyBlok.style.opacity = "0";
+            copiedBlock.style.opacity = "0";
         }, 1100);
 
         setTimeout(() => {
-            skopiowanyBlok.remove();
+            copiedBlock.remove();
             resolve();
         }, 1600);
     });
@@ -141,6 +142,13 @@ function updateInputTape() {
     inputElement.style.backgroundColor = "orange";
     const prevInputElement = document.getElementById(("input" + currentInput.toString()));
     prevInputElement.style.backgroundColor = "white";
+}
+
+function updateOutputTape() {
+    const outputElement = document.getElementById(("output" + (currentOutput+1).toString()));
+    outputElement.style.backgroundColor = "orange";
+    const prevOutputElement = document.getElementById(("output" + currentOutput.toString()));
+    prevOutputElement.style.backgroundColor = "white";
 }
 
 let processorIns = document.getElementById("procIns");
@@ -160,6 +168,9 @@ async function startProgram() {
                 break;
             case "add":
                 await programAdd();
+                break;
+            case "write":
+                await programWrite();
                 break;
         }
 
@@ -214,7 +225,20 @@ async function programAdd() {
 
     await animation(memoryValue, zeroMemoryValue);
     zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
-    zeroMemoryValue.value = (memoryValue.value + zeroMemoryValue.value);
+    zeroMemoryValue.value = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+}
+
+async function programWrite() {
+    await loadRowToProcessor();
+
+    const outputElement = document.getElementById(("output" + currentOutput.toString()));
+
+    await animation(processorArg, memoryValue);
+
+    await animation(memoryValue, outputElement);
+    outputElement.value = memoryValue.value;
+
+    updateOutputTape();
 }
 
 function download(filename, text) {
