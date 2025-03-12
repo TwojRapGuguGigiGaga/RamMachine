@@ -35,6 +35,7 @@ function createNewProgramElement() {
     const id = numbersOfRows - 1;
 
     const newRow = document.createElement("tr");
+    
             
     const idCell = document.createElement("td");
     idCell.textContent = id;
@@ -241,17 +242,26 @@ async function programWrite() {
     updateOutputTape();
 }
 
-function download(filename, text) {
+function download(text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
+    element.setAttribute('download', 'RAM.txt');
 
     element.click();
 }
 
 function handleSubmit(event) {
-    event.preventDefault();  // Prevent form submission
-    var filename = event.target['name'].value;
-    var text = event.target['text'].value;
-    download(filename, text);
+    const programTable = document.getElementById("programTable");
+    const numbersOfRows = programTable.getElementsByTagName("tr").length;
+
+    var text = ""
+
+    for(let x=1;x<(numbersOfRows-1);x++) {
+        let ln = x;
+        let option = document.getElementById("select"+x).value;
+        let arg=document.getElementById("arg"+x).value;
+        text+=ln+"," + option+ "," + arg+"\n";
+    }
+    
+    download(text);
 }
