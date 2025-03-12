@@ -216,3 +216,18 @@ async function programAdd() {
     zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
     zeroMemoryValue.value = (memoryValue.value + zeroMemoryValue.value);
 }
+
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.click();
+}
+
+function handleSubmit(event) {
+    event.preventDefault();  // Prevent form submission
+    var filename = event.target['name'].value;
+    var text = event.target['text'].value;
+    download(filename, text);
+}
