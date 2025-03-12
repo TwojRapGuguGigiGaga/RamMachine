@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write","sub"];
+const instructions = ["read", "add", "write","sub","mult","div"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -175,6 +175,12 @@ async function startProgram() {
             case "sub":
                 await programSub();
                 break;
+            case "mult":
+                await programMult();
+                break;
+            case "div":
+                await programDiv();
+                break;
         }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -272,3 +278,30 @@ async function programSub(){
     zeroMemoryValue.innerHTML = zeroMemoryValue.value - memoryValue.value;
     zeroMemoryValue.value = zeroMemoryValue.value - memoryValue.value;
 }
+
+async function programMult(){
+    await loadRowToProcessor();
+
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+
+    memoryValue.value = parseInt(memoryValue.value);
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+    zeroMemoryValue.innerHTML = zeroMemoryValue.value * memoryValue.value;
+    zeroMemoryValue.value = zeroMemoryValue.value * memoryValue.value;
+}
+
+async function programDiv(){
+    await loadRowToProcessor();
+
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+
+    memoryValue.value = parseInt(memoryValue.value);
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+    zeroMemoryValue.innerHTML = Math.floor((zeroMemoryValue.value) / (memoryValue.value));
+    zeroMemoryValue.value = Math.floor((zeroMemoryValue.value) / (memoryValue.value));
+}
+
