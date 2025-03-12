@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write"];
+const instructions = ["read", "add", "write","sub"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -161,6 +161,9 @@ async function startProgram() {
             case "add":
                 await programAdd();
                 break;
+            case "sub":
+                await programSub();
+                break;
         }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -214,5 +217,18 @@ async function programAdd() {
 
     await animation(memoryValue, zeroMemoryValue);
     zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
-    zeroMemoryValue.value = (memoryValue.value + zeroMemoryValue.value);
+    zeroMemoryValue.value = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+}
+
+async function programSub(){
+    await loadRowToProcessor();
+
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+
+    memoryValue.value = parseInt(memoryValue.value);
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+    zeroMemoryValue.innerHTML = zeroMemoryValue.value - memoryValue.value;
+    zeroMemoryValue.value = zeroMemoryValue.value - memoryValue.value;
 }
