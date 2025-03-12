@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write"];
+const instructions = ["read", "add", "write","sub","mult","div"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -172,6 +172,15 @@ async function startProgram() {
                 break;
             case "write":
                 await programWrite();
+                break;
+            case "sub":
+                await programSub();
+                break;
+            case "mult":
+                await programMult();
+                break;
+            case "div":
+                await programDiv();
                 break;
         }
 
