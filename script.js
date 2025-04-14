@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write","sub","mult","div"];
+const instructions = ["read", "add", "write", "sub", "mult", "div", "load"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -182,6 +182,9 @@ async function startProgram() {
             case "div":
                 await programDiv();
                 break;
+            case "load":
+                await programLoad();
+                break;
         }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -210,9 +213,11 @@ async function loadRowToProcessor() {
     processorIns.innerHTML = instructionValue;
     processorIns.value = instructionValue;
 
-    await animation(argument, processorArg);
-    processorArg.innerHTML = argumentValue;
-    processorArg.value = argumentValue;
+    if (argument = null) {
+        await animation(argument, processorArg);
+        processorArg.innerHTML = argumentValue;
+        processorArg.value = argumentValue;
+    }
 }
 
 async function programRead() {
@@ -249,6 +254,14 @@ async function programWrite() {
     outputElement.value = memoryValue.value;
 
     updateOutputTape();
+}
+
+async function programLoad() {
+    await loadRowToProcessor();
+    
+    const inputElement = document.getElementById(("input" + currentInput.toString()));
+    await animation(inputElement, zeroMemoryValue);
+    zeroMemoryValue.innerHTML = inputElement.value;
 }
 
 function download(text) {
