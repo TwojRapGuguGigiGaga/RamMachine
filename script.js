@@ -287,3 +287,21 @@ function handleSubmit(event) {
     
     download(text);
 }
+function loadFile(){
+    document.getElementById("fileInput").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const fileContent = e.target.result;
+            
+            const lines = fileContent.split('\n');
+            
+            lines.forEach((line) => {
+                console.log(`${line}`);
+            });
+        };
+
+        reader.readAsText(file);
+    });
+}
