@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write", "sub", "mult", "div", "load"];
+const instructions = ["read", "add", "write", "sub", "mult", "div", "load","jump"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -47,6 +47,7 @@ function createNewProgramElement() {
     const labelCell = document.createElement("td");
     const labelInput = document.createElement("input");
     labelInput.setAttribute("type", "number");
+    labelInput.setAttribute("id", ("label"+id));
     labelCell.appendChild(labelInput);
 
     const instructionCell = document.createElement("td");
@@ -185,6 +186,9 @@ async function startProgram() {
             case "load":
                 await programLoad();
                 break;
+            case "Jump":
+                await programJump();
+                break;
         }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -263,6 +267,13 @@ async function programLoad() {
     await animation(inputElement, zeroMemoryValue);
     zeroMemoryValue.innerHTML = inputElement.value;
 }
+async function programJump() {
+    await loadRowToProcessor();
+    
+    const inputElement = document.getElementById(("input" + currentInput.toString()));
+    await animation(inputElement, zeroMemoryValue);
+    zeroMemoryValue.innerHTML = inputElement.value;
+}
 
 function download(text) {
     var element = document.createElement('a');
@@ -280,9 +291,10 @@ function handleSubmit(event) {
 
     for(let x=1;x<(numbersOfRows-1);x++) {
         let ln = x;
+        let label = document.getElementById("label"+x).value;
         let option = document.getElementById("select"+x).value;
         let arg=document.getElementById("arg"+x).value;
-        text+=ln+"," + option+ "," + arg+"\n";
+        text+=ln+","+label+"," + option+ "," + arg+"\n";
     }
     
     download(text);
