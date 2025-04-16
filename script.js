@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write", "sub", "mult", "div", "load","jump"];
+const instructions = ["read", "add", "write", "sub", "mult", "div", "load"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -28,7 +28,7 @@ function addMemoryElements() {
     }
 }
 
-function createNewProgramElement() {
+function createNewProgramElement(label, instruction, argument) {
     const programTable = document.getElementById("programTable");
     const numbersOfRows = programTable.getElementsByTagName("tr").length;
 
@@ -48,6 +48,9 @@ function createNewProgramElement() {
     const labelInput = document.createElement("input");
     labelInput.setAttribute("type", "number");
     labelInput.setAttribute("id", ("label"+id));
+    if(label){
+        labelInput.value = label;
+    }
     labelCell.appendChild(labelInput);
 
     const instructionCell = document.createElement("td");
@@ -59,10 +62,15 @@ function createNewProgramElement() {
         option.textContent = instructions[i];
         select.appendChild(option);
     }
+    select.value = instruction;
+
     instructionCell.appendChild(select);
 
     const argumentCell = document.createElement("td");
     const argumentInput = document.createElement("input");
+    if(argument){
+        argumentInput.value = argument;
+    }
     argumentInput.setAttribute("type", "number");
     argumentInput.setAttribute("id", ("arg" + id.toString()));
     argumentCell.appendChild(argumentInput);
@@ -102,6 +110,7 @@ function addTapeElements(tapeType) {
 
         tape.appendChild(inputDiv);
     }
+
 }
 
 let currentStep = 1;
@@ -324,11 +333,10 @@ function handleSubmit(event) {
     var text = ""
 
     for(let x=1;x<(numbersOfRows-1);x++) {
-        let ln = x;
         let label = document.getElementById("label"+x).value;
         let option = document.getElementById("select"+x).value;
         let arg=document.getElementById("arg"+x).value;
-        text+=ln+","+label+"," + option+ "," + arg+"\n";
+        text+=label+","+option+ "," + arg+"\n";
     }
     
     download(text);
@@ -337,14 +345,23 @@ function loadFile(){
     document.getElementById("fileInput").addEventListener("change", function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
-
+        let table = document.getElementById("programTable");
+        let rows = table.rows.length;
+        /*
+        for(let x = rows; x > 0; x--){
+            table.deleteRow(x);
+        }
+        */
         reader.onload = function(e) {
             const fileContent = e.target.result;
             
             const lines = fileContent.split('\n');
-            
+
             lines.forEach((line) => {
-                console.log(`${line}`);
+                if (line != '') {
+                    let elements = line.split(",");
+                    createNewProgramElement(elements[0], elements[1], elements[2]);
+                }
             });
         };
 
