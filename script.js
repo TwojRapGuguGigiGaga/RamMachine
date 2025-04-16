@@ -271,6 +271,40 @@ function download(text) {
 
     element.click();
 }
+async function programMult(){
+    await loadRowToProcessor();
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+    memoryValue.value = parseInt(memoryValue.value);
+
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+    zeroMemoryValue.innerHTML = zeroMemoryValue.value * memoryValue.value;
+
+    zeroMemoryValue.value = zeroMemoryValue.value * memoryValue.value;
+}
+async function programDiv(){
+    await loadRowToProcessor();
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+    memoryValue.value = parseInt(memoryValue.value);
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+
+    zeroMemoryValue.innerHTML = Math.floor((zeroMemoryValue.value) / (memoryValue.value));
+    zeroMemoryValue.value = Math.floor((zeroMemoryValue.value) / (memoryValue.value));
+}
+async function programSub(){
+    await loadRowToProcessor();
+    await animation(processorArg, memoryValue);
+    await animation(memoryValue, zeroMemoryValue);
+    memoryValue.value = parseInt(memoryValue.value);
+    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+
+
+    zeroMemoryValue.innerHTML = Math.floor((zeroMemoryValue.value) - (memoryValue.value));
+    zeroMemoryValue.value = Math.floor((zeroMemoryValue.value) - (memoryValue.value));
+}
 
 function handleSubmit(event) {
     const programTable = document.getElementById("programTable");
