@@ -345,13 +345,14 @@ function loadFile(){
     document.getElementById("fileInput").addEventListener("change", function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
-        let table = document.getElementById("programTable");
-        let rows = table.rows.length;
-        /*
-        for(let x = rows; x > 0; x--){
-            table.deleteRow(x);
+        
+        const table = document.getElementById("programTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for(let x = rows.length; x>2; x--){
+            table.deleteRow(x-1);
         }
-        */
+        
         reader.onload = function(e) {
             const fileContent = e.target.result;
             
@@ -366,5 +367,7 @@ function loadFile(){
         };
 
         reader.readAsText(file);
+        
     });
+    
 }
