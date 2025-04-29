@@ -2,7 +2,7 @@ window.onload = function() {
     addMemoryElements();
     createNewProgramElement();
     addTapeElements("input");
-    addTapeElements("nugger");
+    addTapeElements("output");
 }
 
 const instructions = ["read", "add", "write", "sub", "mult", "div", "load"];
