@@ -164,16 +164,20 @@ function updateOutputTape() {
 
 let processorIns = document.getElementById("procIns");
 let processorArg = document.getElementById("procArg");
+let currentIndex = 0;
 
 async function startProgram() {
     const programTable = document.getElementById("programTable");
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
-    for (let i=0; i<numberOfSteps; i++) {
-        updateVariables();
+    while (currentIndex < numberOfSteps) {
+        console.log(currentIndex);
+        if (!toStop) {
+            updateVariables();
 
-        const instructionValue = document.getElementById(("select" + currentInput.toString())).value;
-        switch (instructionValue) {
+            const instructionValue = document.getElementById(("select" + currentInput.toString())).value;
+
+           switch (instructionValue) {
             case "read":
                 await programRead();
                 break;
@@ -198,16 +202,35 @@ async function startProgram() {
             case "Jump":
                 await programJump();
                 break;
+            } 
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            currentInput++;
+
+            const programRow = document.getElementById(("programRow" + currentInput.toString()));
+            programRow.style.backgroundColor = "orange";
+            const prevProgramRow = document.getElementById(("programRow" + (currentInput-1).toString()));
+            prevProgramRow.style.backgroundColor = "#222";
+
+            currentIndex++;
+        } else {
+            return;
         }
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        currentInput++;
-
-        const programRow = document.getElementById(("programRow" + currentInput.toString()));
-        programRow.style.backgroundColor = "orange";
-        const prevProgramRow = document.getElementById(("programRow" + (currentInput-1).toString()));
-        prevProgramRow.style.backgroundColor = "#222";
     }
+}
+
+
+let toStop = false;
+function stopProgram() {
+    toStop = true;
+    console.log("toStop:" + toStop);
+}
+
+function continueProgram() {
+    toStop = false;
+    console.log("toStop:" + toStop);
+
+    startProgram();
 }
 
 let instruction, instructionValue, argument, argumentValue, zeroMemoryValue, memoryValue;
