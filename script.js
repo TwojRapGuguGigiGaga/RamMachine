@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write", "sub", "mult", "div", "load"];
+const instructions = ["read", "add", "write", "sub", "mult", "div", "load", "jump"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -46,7 +46,7 @@ function createNewProgramElement(label, instruction, argument) {
 
     const labelCell = document.createElement("td");
     const labelInput = document.createElement("input");
-    labelInput.setAttribute("type", "number");
+    labelInput.setAttribute("type", "text");
     labelInput.setAttribute("id", ("label"+id));
     if(label){
         labelInput.value = label;
@@ -71,7 +71,7 @@ function createNewProgramElement(label, instruction, argument) {
     if(argument){
         argumentInput.value = argument;
     }
-    argumentInput.setAttribute("type", "number");
+    argumentInput.setAttribute("type", "text");
     argumentInput.setAttribute("id", ("arg" + id.toString()));
     argumentCell.appendChild(argumentInput);
 
@@ -171,15 +171,17 @@ async function startProgram() {
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
     while (currentIndex < numberOfSteps) {
-        console.log(currentIndex);
+        console.log("currentIndex: " + currentIndex);
         if (!toStop) {
             updateVariables();
 
             const instructionValue = document.getElementById(("select" + currentInput.toString())).value;
+            changeInput = true;
 
            switch (instructionValue) {
             case "read":
                 await programRead();
+                currentInput++;
                 break;
             case "add":
                 await programAdd();
@@ -199,20 +201,23 @@ async function startProgram() {
             case "load":
                 await programLoad();
                 break;
-            case "Jump":
+            case "jump":
                 await programJump();
+                changeInput = false;
                 break;
             } 
 
             await new Promise(resolve => setTimeout(resolve, 1000));
-            currentInput++;
+
+            if (changeInput) {
+                currentIndex++;
+            }
 
             const programRow = document.getElementById(("programRow" + currentInput.toString()));
             programRow.style.backgroundColor = "orange";
             const prevProgramRow = document.getElementById(("programRow" + (currentInput-1).toString()));
             prevProgramRow.style.backgroundColor = "#222";
-
-            currentIndex++;
+            
         } else {
             return;
         }
@@ -249,11 +254,9 @@ async function loadRowToProcessor() {
     processorIns.innerHTML = instructionValue;
     processorIns.value = instructionValue;
 
-    if (argument = null) {
-        await animation(argument, processorArg);
-        processorArg.innerHTML = argumentValue;
-        processorArg.value = argumentValue;
-    }
+    await animation(argument, processorArg);
+    processorArg.innerHTML = argumentValue;
+    processorArg.value = argumentValue;
 }
 
 async function programRead() {
@@ -290,6 +293,7 @@ async function programWrite() {
     outputElement.value = memoryValue.value;
 
     updateOutputTape();
+    currentOutput++;
 }
 
 async function programLoad() {
@@ -299,12 +303,23 @@ async function programLoad() {
     await animation(inputElement, zeroMemoryValue);
     zeroMemoryValue.innerHTML = inputElement.value;
 }
+
 async function programJump() {
     await loadRowToProcessor();
     
-    const inputElement = document.getElementById(("input" + currentInput.toString()));
-    await animation(inputElement, zeroMemoryValue);
-    zeroMemoryValue.innerHTML = inputElement.value;
+    const programTable = document.getElementById("programTable");
+    const numberOfRows = programTable.getElementsByTagName("tr").length;
+
+    for (let x = 1; x < numberOfRows - 1; x++) {
+        let labelValue = document.getElementById("label" + x).value;
+        if (argument.value === labelValue) {
+            currentIndex = x - 1;
+            currentInput = currentIndex;
+            const nextProgramRow = document.getElementById(("programRow" + (currentInput+2).toString()));
+            nextProgramRow.style.backgroundColor = "#222";
+            break;
+        }
+    };
 }
 
 function download(text) {
