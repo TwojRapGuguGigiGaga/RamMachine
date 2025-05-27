@@ -185,7 +185,7 @@ async function startProgram() {
         const prevRow = document.getElementById("programRow" + prevRowIndex);
         const curRow = document.getElementById("programRow" + currentIndex);
 
-        if (prevRow) prevRow.style.backgroundColor = "#222";
+        if (prevRow) prevRow.style.backgroundColor = "#f9f9f9";
         if (curRow) curRow.style.backgroundColor = "orange";
 
         prevRowIndex = currentIndex;
