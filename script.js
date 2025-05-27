@@ -165,19 +165,38 @@ function updateOutputTape() {
 let processorIns = document.getElementById("procIns");
 let processorArg = document.getElementById("procArg");
 let currentIndex = 0;
+let prevRowIndex = 0;
+changeInput = true;
 
 async function startProgram() {
     const programTable = document.getElementById("programTable");
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
     while (currentIndex < numberOfSteps) {
+        if (changeInput) {
+            currentIndex++;
+        } else {
+            changeInput = true;
+        }
+
+        console.log("curRowIndex - " + currentIndex);
+        console.log("prevRowIndex - " + prevRowIndex);
+
+        const prevRow = document.getElementById("programRow" + prevRowIndex);
+        const curRow = document.getElementById("programRow" + currentIndex);
+
+        if (prevRow) prevRow.style.backgroundColor = "#222";
+        if (curRow) curRow.style.backgroundColor = "orange";
+
+        prevRowIndex = currentIndex;
+
         console.log("currentIndex: " + currentIndex);
         if (!toStop) {
             updateVariables();
 
-            const instructionValue = document.getElementById(("select" + currentInput.toString())).value;
-            changeInput = true;
-
+            const instructionValue = document.getElementById(("select" + currentIndex.toString())).value;
+            console.log(currentIndex + " - " + instructionValue);
+        
            switch (instructionValue) {
             case "read":
                 await programRead();
@@ -208,15 +227,6 @@ async function startProgram() {
             } 
 
             await new Promise(resolve => setTimeout(resolve, 1000));
-
-            if (changeInput) {
-                currentIndex++;
-            }
-
-            const programRow = document.getElementById(("programRow" + currentInput.toString()));
-            programRow.style.backgroundColor = "orange";
-            const prevProgramRow = document.getElementById(("programRow" + (currentInput-1).toString()));
-            prevProgramRow.style.backgroundColor = "#222";
             
         } else {
             return;
@@ -241,9 +251,9 @@ function continueProgram() {
 let instruction, instructionValue, argument, argumentValue, zeroMemoryValue, memoryValue;
 
 function updateVariables() {
-    instruction = document.getElementById("select" + currentInput.toString());
+    instruction = document.getElementById("select" + currentIndex.toString());
     instructionValue = instruction.value;
-    argument = document.getElementById("arg" + currentInput.toString());
+    argument = document.getElementById("arg" + currentIndex.toString());
     argumentValue = argument.value;
     zeroMemoryValue = document.getElementById("memoryValue0");
     memoryValue = document.getElementById("memoryValue" + argumentValue);
@@ -306,20 +316,18 @@ async function programLoad() {
 
 async function programJump() {
     await loadRowToProcessor();
-    
+
     const programTable = document.getElementById("programTable");
     const numberOfRows = programTable.getElementsByTagName("tr").length;
 
     for (let x = 1; x < numberOfRows - 1; x++) {
-        let labelValue = document.getElementById("label" + x).value;
-        if (argument.value === labelValue) {
-            currentIndex = x - 1;
-            currentInput = currentIndex;
-            const nextProgramRow = document.getElementById(("programRow" + (currentInput+2).toString()));
-            nextProgramRow.style.backgroundColor = "#222";
+        let label = document.getElementById("label" + x);
+        if (argument.value === label.value) {
+            await animation(processorArg, label);
+            currentIndex = x;
             break;
         }
-    };
+    }
 }
 
 function download(text) {
