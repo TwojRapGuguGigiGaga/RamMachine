@@ -8,38 +8,31 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="navbar box">
+    <div class="navbar">
         <ul>
             <li><button onclick="handleSubmit()">Zapisz do pliku</button></li>
-            <li>View</li>
-            <li>Program</li>
-            <li>Data</li>
-            <li>Tools</li>
-            <li>Help</li>
+            <li><button>View</button></li>
+            <li><button>Program</button></li>
+            <li><button>Data</button></li>
+            <li><button>Tools</button></li>
+            <li><button>Help</button></li>
         </ul>
         <hr>
         <ul>
-            <li><input type="file" id="fileInput" oninput="loadFile()"></input></li>
-            <li>
-                <button onclick="continueProgram()">CONTINUE</button>
-            </li>
-            <li>
-                <button onclick="startProgram()">START</button>
-            </li>
-            <li>
-                <button onclick="stopProgram()">STOP</button>
-            </li>
-            <li>
-                <button onclick="nextStep()">NEXT</button>
-            </li>
-            <li>PREV</li>
-            <li>NEXT</li>
+            <li><input type="file" id="fileInput" oninput="loadFile()"></li>
+            <li><button onclick="continueProgram()">CONTINUE</button></li>
+            <li><button onclick="startProgram()">START</button></li>
+            <li><button onclick="stopProgram()">STOP</button></li>
+            <li><button onclick="nextStep()">NEXT</button></li>
+            <li><button>PREV</button></li>
+            <li><button>NEXT</button></li>
         </ul>
     </div>
+    
 
     <div class="main">
         <div class="leftSide">
-            <div class="processor box">
+            <div class="processor">
                 <h3>PROCESSOR</h3>
                 <p>Instruction</p>
                 <input id="procIns" value="0" disabled></input>
@@ -47,15 +40,15 @@
                 <input id="procArg" value="0" disabled></input>
             </div>
 
-            <div class="memory box">
+            <div class="memory">
                 <table id="memoryTable">
                     <tr>
-                        <th>MEMORY</th>
+                        <th colspan="2">MEMORY</th>
                     </tr>
 
                     <tr>
-                        <td>Address</td>
-                        <td>Value</td>
+                        <th>Address</th>
+                        <th>Value</th>
                     </tr>
 
                     <!-- reszta dodaje sie przez js, funkcja onload -->
@@ -64,29 +57,27 @@
         </div>
 
         <div class="rightSide">
-            <div class="inputTape box">
+            <div class="inputTape">
                 <div class="userInput" id="inputTape"></div>
             </div> 
 
-            <div class="program box">
+            <div class="program">
                 <table id="programTable">
                     <tr>
-                        <th>PROGRAM</th>
-                        <th>
-                            <button onclick="createNewProgramElement()">ADD ELEMENT</button>
-                        </th>
+                        <th class="program" colspan="4">PROGRAM</th>
+
                     </tr>
 
                     <tr>
-                        <td>LN</td>
-                        <td>Label</td>
-                        <td>Instruction</td>
-                        <td>Argument</td>
+                        <th>LN</th>
+                        <th>Label</th>
+                        <th>Instruction</th>
+                        <th>Argument</th>
                     </tr>
                 </table>
             </div>
-
-            <div class="outputTape box">
+            <button onclick="createNewProgramElement()">ADD ELEMENT</button>
+            <div class="outputTape">
                 <div class="userInput" id="outputTape">
                 </div>
             </div>
