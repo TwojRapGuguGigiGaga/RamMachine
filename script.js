@@ -5,7 +5,7 @@ window.onload = function() {
     addTapeElements("output");
 }
 
-const instructions = ["read", "add", "write", "sub", "mult", "div", "load", "jump"];
+const instructions = ["read", "add", "write", "sub", "mult", "div", "load", "jump", "jgtz", "jzero", "store"];
 
 function addMemoryElements() {
     const memoryTable = document.getElementById("memoryTable");
@@ -173,58 +173,69 @@ async function startProgram() {
     const numberOfSteps = programTable.getElementsByTagName("tr").length - 2;
 
     while (currentIndex < numberOfSteps) {
-        if (changeInput) {
-            currentIndex++;
-        } else {
-            changeInput = true;
-        }
-
-        console.log("curRowIndex - " + currentIndex);
-        console.log("prevRowIndex - " + prevRowIndex);
-
-        const prevRow = document.getElementById("programRow" + prevRowIndex);
-        const curRow = document.getElementById("programRow" + currentIndex);
-
-        if (prevRow) prevRow.style.backgroundColor = "#f9f9f9";
-        if (curRow) curRow.style.backgroundColor = "orange";
-
-        prevRowIndex = currentIndex;
-
-        console.log("currentIndex: " + currentIndex);
         if (!toStop) {
+
+            if (changeInput) {
+                currentIndex++;
+            } else {
+                changeInput = true;
+            }
+
+            console.log("curRowIndex - " + currentIndex);
+            console.log("prevRowIndex - " + prevRowIndex);
+
+            const prevRow = document.getElementById("programRow" + prevRowIndex);
+            const curRow = document.getElementById("programRow" + currentIndex);
+
+            if (prevRow) prevRow.style.backgroundColor = "#f9f9f9";
+            if (curRow) curRow.style.backgroundColor = "orange";
+
+            prevRowIndex = currentIndex;
+
+            console.log("currentIndex: " + currentIndex);
+
             updateVariables();
 
             const instructionValue = document.getElementById(("select" + currentIndex.toString())).value;
             console.log(currentIndex + " - " + instructionValue);
         
-           switch (instructionValue) {
-            case "read":
-                await programRead();
-                currentInput++;
-                break;
-            case "add":
-                await programAdd();
-                break;
-            case "write":
-                await programWrite();
-                break;
-            case "sub":
-                await programSub();
-                break;
-            case "mult":
-                await programMult();
-                break;
-            case "div":
-                await programDiv();
-                break;
-            case "load":
-                await programLoad();
-                break;
-            case "jump":
-                await programJump();
-                changeInput = false;
-                break;
-            } 
+            switch (instructionValue) {
+                case "read":
+                    await programRead();
+                    currentInput++;
+                    break;
+                case "add":
+                    await programAdd();
+                    break;
+                case "write":
+                    await programWrite();
+                    break;
+                case "sub":
+                    await programSub();
+                    break;
+                case "mult":
+                    await programMult();
+                    break;
+                case "div":
+                    await programDiv();
+                    break;
+                case "load":
+                    await programLoad();
+                    break;
+                case "jump":
+                    await programJump();
+                    changeInput = false;
+                    break;
+                case "jgtz":
+                    await programJGTZ();
+                    break;
+                case "jzero":
+                    await programJZero();
+                    break;
+                case "store":
+                    await programStore();
+                    break;
+            }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
             
@@ -282,14 +293,34 @@ async function programRead() {
     updateInputTape();
 }
 
+async function programStore() {
+    await loadRowToProcessor();
+
+    console.log(zeroMemoryValue);
+    await animation(processorArg, zeroMemoryValue);
+    await animation(zeroMemoryValue, memoryValue);
+    memoryValue.innerHTML = zeroMemoryValue.innerHTML;
+    memoryValue.value = zeroMemoryValue.value;
+}
+
 async function programAdd() {
     await loadRowToProcessor();
 
-    await animation(processorArg, memoryValue);
-
-    await animation(memoryValue, zeroMemoryValue);
-    zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
-    zeroMemoryValue.value = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+    console.log(argumentValue);
+    if(argumentValue[0] == "="){
+        argumentValue = argumentValue.substr(1, argumentValue.length);
+        await animation(processorArg, zeroMemoryValue);
+        zeroMemoryValue.innerHTML = (parseInt(zeroMemoryValue.value) + parseInt(argumentValue));
+        zeroMemoryValue.value = (parseInt(zeroMemoryValue.value) + parseInt(argumentValue));
+    } else {
+        argumentValue.substr(1, argumentValue.length);
+        console.log(argumentValue);
+        await animation(processorArg, memoryValue);
+        await animation(memoryValue, zeroMemoryValue);
+        zeroMemoryValue.innerHTML = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+        zeroMemoryValue.value = (parseInt(memoryValue.value) + parseInt(zeroMemoryValue.value));
+    }
+    
 }
 
 async function programWrite() {
@@ -309,10 +340,49 @@ async function programWrite() {
 async function programLoad() {
     await loadRowToProcessor();
     
-    const inputElement = document.getElementById(("input" + currentInput.toString()));
-    await animation(inputElement, zeroMemoryValue);
-    zeroMemoryValue.innerHTML = inputElement.value;
+    await animation(processorArg, memoryValue)
+    await animation(memoryValue, zeroMemoryValue);
+    zeroMemoryValue.innerHTML = memoryValue.value;
+    zeroMemoryValue.value = memoryValue.value;
 }
+
+async function programJZero() {
+    await loadRowToProcessor();
+
+    const programTable = document.getElementById("programTable");
+    const numberOfRows = programTable.getElementsByTagName("tr").length;
+
+    for (let x = 1; x < numberOfRows - 1; x++) {
+        let label = document.getElementById("label" + x);
+        if (argument.value === label.value &&
+            zeroMemoryValue.value == 0
+        ) {
+            await animation(processorArg, label);
+            currentIndex = x;
+            changeInput = false;
+            break;
+        }
+    }
+}
+
+async function programJGTZ() {
+    await loadRowToProcessor();
+
+    const programTable = document.getElementById("programTable");
+    const numberOfRows = programTable.getElementsByTagName("tr").length;
+    for (let x = 1; x < numberOfRows - 1; x++) {
+        let label = document.getElementById("label" + x);
+        if (argument.value === label.value &&
+            zeroMemoryValue.value > 0
+        ) {
+            await animation(processorArg, label);
+            currentIndex = x;
+            changeInput = false;
+            break;
+        }
+    }
+}
+
 
 async function programJump() {
     await loadRowToProcessor();
@@ -330,6 +400,7 @@ async function programJump() {
     }
 }
 
+
 function download(text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -339,15 +410,23 @@ function download(text) {
 }
 async function programMult(){
     await loadRowToProcessor();
-    await animation(processorArg, memoryValue);
-    await animation(memoryValue, zeroMemoryValue);
-    memoryValue.value = parseInt(memoryValue.value);
 
-    zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
-
-    zeroMemoryValue.innerHTML = zeroMemoryValue.value * memoryValue.value;
-
-    zeroMemoryValue.value = zeroMemoryValue.value * memoryValue.value;
+    if(argumentValue[0] == "="){
+        argumentValue = argumentValue.substr(1, argumentValue.length);
+        await animation(processorArg, zeroMemoryValue);
+        zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+        zeroMemoryValue.innerHTML = zeroMemoryValue.value * argumentValue;
+        zeroMemoryValue.value = zeroMemoryValue.value * argumentValue;
+    } else {
+        argumentValue = argumentValue.substr(1, argumentValue.length);
+        await animation(processorArg, memoryValue);
+        await animation(memoryValue, zeroMemoryValue);
+        memoryValue.value = parseInt(memoryValue.value);
+        zeroMemoryValue.value = parseInt(zeroMemoryValue.value);
+        zeroMemoryValue.innerHTML = zeroMemoryValue.value * memoryValue.value;
+        zeroMemoryValue.value = zeroMemoryValue.value * memoryValue.value;
+    }
+    
 }
 async function programDiv(){
     await loadRowToProcessor();
