@@ -10,22 +10,24 @@
 <body>
     <div class="navbar">
         <ul>
-            <li><button onclick="handleSubmit()">Zapisz do pliku</button></li>
-            <li><button>View</button></li>
-            <li><button>Program</button></li>
-            <li><button>Data</button></li>
-            <li><button>Tools</button></li>
-            <li><button>Help</button></li>
+            <li>
+                <button onclick="handleSubmit()">Zapisz do pliku</button>
+            </li>
+            <li>
+                <input 
+                    type="file" 
+                    id="fileInput" 
+                    oninput="loadFile()"
+                    style="width: max-content;"
+                >
+            </li>
         </ul>
         <hr>
         <ul>
-            <li><input type="file" id="fileInput" oninput="loadFile()"></li>
             <li><button onclick="continueProgram()">CONTINUE</button></li>
             <li><button onclick="startProgram()">START</button></li>
             <li><button onclick="stopProgram()">STOP</button></li>
-            <li><button onclick="nextStep()">NEXT</button></li>
-            <li><button>PREV</button></li>
-            <li><button>NEXT</button></li>
+            <!-- <li><button onclick="nextStep()">NEXT</button></li> -->
         </ul>
     </div>
     
@@ -35,9 +37,9 @@
             <div class="processor">
                 <h3>PROCESSOR</h3>
                 <p>Instruction</p>
-                <input id="procIns" value="0" disabled></input>
+                <input id="procIns" value="0" disabled>
                 <p>Argument</p>
-                <input id="procArg" value="0" disabled></input>
+                <input id="procArg" value="0" disabled>
             </div>
 
             <div class="memory">

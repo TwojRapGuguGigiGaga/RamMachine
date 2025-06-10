@@ -219,7 +219,7 @@ input:focus {
     border-radius: 4px;
 }
 .program {
-    max-height: 300px;     
+    max-height: 450px;     
     overflow-y: auto;      
     border: 1px solid #999; 
     border-radius: 8px;

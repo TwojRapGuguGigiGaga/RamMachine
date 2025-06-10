@@ -340,10 +340,17 @@ async function programWrite() {
 async function programLoad() {
     await loadRowToProcessor();
     
-    await animation(processorArg, memoryValue)
-    await animation(memoryValue, zeroMemoryValue);
-    zeroMemoryValue.innerHTML = memoryValue.value;
-    zeroMemoryValue.value = memoryValue.value;
+    if(argumentValue[0] == "=") {
+        argumentValue = argumentValue.substr(1, argumentValue.length);
+        await animation(processorArg, zeroMemoryValue);
+        zeroMemoryValue.innerHTML = argumentValue;
+        zeroMemoryValue.value = argumentValue;
+    } else {
+        await animation(processorArg, memoryValue)
+        await animation(memoryValue, zeroMemoryValue);
+        zeroMemoryValue.innerHTML = memoryValue.value;
+        zeroMemoryValue.value = memoryValue.value;
+    }
 }
 
 async function programJZero() {
